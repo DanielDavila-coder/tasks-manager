@@ -1,4 +1,4 @@
-# Tasks Manager
+﻿# Tasks Manager
 
 Tasks Manager is a full stack web application for managing personal tasks. It allows users to create an account, log in, organize tasks by status, priority, and area, review statistics through a dashboard, use a Kanban view, and manage their profile information.
 
@@ -276,7 +276,7 @@ VITE_API_URL=http://localhost:4000/api
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/tasks-manager.git
+git clone https://github.com/DanielDavila-coder/tasks-manager.git
 ```
 
 ### 2. Enter the project folder
@@ -427,3 +427,4 @@ It currently allows users to register, log in, manage tasks, use the dashboard, 
 This project represents my first step in building a more complete full stack application. It started as a basic practice project about implementing login and registration, but I kept adding features and fixing details little by little while learning, until I created a web application with real practical value.
 
 The part that helped me the most was understanding how the frontend, backend, and database connect within a single project. It also helped me practice how to turn a simple idea into a more complete and presentable application.
+
