@@ -38,11 +38,7 @@ export const register = async (req, res) => {
     const useSaved = await newUser.save();
     const token = await createAccessToken({ id: useSaved._id });
 
-    console.log("ENTRO A LOGIN"); //////////
-
-    console.log("COOKIE OPTIONS:", COOKIE_OPTIONS); ///////////////////
     res.cookie("token", token, COOKIE_OPTIONS);
-    console.log("TOKEN ENVIADO"); ////////////////////////////////////////////
     res.json(formatUserResponse(useSaved));
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -63,7 +59,10 @@ export const login = async (req, res) => {
 
     const token = await createAccessToken({ id: userFound._id });
 
+    console.log("ENTRO A LOGIN"); /////////////////////////////////////////////
+    console.log("COOKIE OPTIONS:", COOKIE_OPTIONS); ///////////////////////////////////////////////
     res.cookie("token", token, COOKIE_OPTIONS);
+    console.log("TOKEN ENVIADO"); /////////////////////////////////////////////////
     res.json(formatUserResponse(userFound));
   } catch (error) {
     res.status(500).json({ message: error.message });
