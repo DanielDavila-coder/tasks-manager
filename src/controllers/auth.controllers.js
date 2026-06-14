@@ -38,6 +38,8 @@ export const register = async (req, res) => {
     const useSaved = await newUser.save();
     const token = await createAccessToken({ id: useSaved._id });
 
+    console.log("ENTRO A LOGIN"); //////////
+
     console.log("COOKIE OPTIONS:", COOKIE_OPTIONS); ///////////////////
     res.cookie("token", token, COOKIE_OPTIONS);
     console.log("TOKEN ENVIADO"); ////////////////////////////////////////////
