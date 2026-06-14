@@ -24,6 +24,8 @@ export const authRequired = (req, res, next) => {
   console.log("========== AUTH REQUIRED ==========");
   console.log("Cookies recibidas:", req.cookies);
 
+  console.log("RAW COOKIE HEADER:", req.headers.cookie);
+  console.log("PARSED COOKIES:", req.cookies);
   const { token } = req.cookies;
 
   if (!token) {
