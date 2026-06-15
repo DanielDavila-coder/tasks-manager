@@ -2,11 +2,7 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { createAccessToken } from "../libs/jwt.js";
 import jwt from "jsonwebtoken";
-import {
-  COOKIE_OPTIONS,
-  HAS_CLOUDINARY_CONFIG,
-  TOKEN_SECRET,
-} from "../config.js";
+import { HAS_CLOUDINARY_CONFIG, TOKEN_SECRET } from "../config.js";
 import Task from "../models/task.model.js";
 import { getTokenFromRequest } from "../middlewares/validateToken.js";
 import cloudinary from "../libs/cloudinary.js";
@@ -39,7 +35,6 @@ export const register = async (req, res) => {
     const useSaved = await newUser.save();
     const token = await createAccessToken({ id: useSaved._id });
 
-    res.cookie("token", token, COOKIE_OPTIONS);
     res.json({ ...formatUserResponse(useSaved), token });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -60,7 +55,6 @@ export const login = async (req, res) => {
 
     const token = await createAccessToken({ id: userFound._id });
 
-    res.cookie("token", token, COOKIE_OPTIONS);
     res.json({ ...formatUserResponse(userFound), token });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -68,11 +62,6 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  res.cookie("token", "", {
-    ...COOKIE_OPTIONS,
-    maxAge: 0,
-    expires: new Date(0),
-  });
   return res.sendStatus(200);
 };
 
@@ -214,11 +203,6 @@ export const deleteAccount = async (req, res) => {
 
     await User.findByIdAndDelete(req.user.id);
 
-    res.cookie("token", "", {
-      ...COOKIE_OPTIONS,
-      maxAge: 0,
-      expires: new Date(0),
-    });
 
     return res.json({ message: "Account deleted successfully" });
   } catch (error) {

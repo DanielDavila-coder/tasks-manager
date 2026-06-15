@@ -21,6 +21,7 @@ This is my first complete full stack project. It started as a basic CRUD practic
 - [Challenges I faced during development](#challenges-i-faced-during-development)
 - [What I learned](#what-i-learned)
 - [Roadmap](#roadmap)
+- [Deployment notes](#deployment-notes)
 - [Project status](#project-status)
 - [Author](#author)
 - [Personal note](#personal-note)
@@ -94,7 +95,7 @@ At first, the idea was to build a simple task app, but as I kept learning, I add
 - Logout.
 - Session verification.
 - Protected routes.
-- Token management with cookies.
+- JWT Bearer Token authentication.
 - Username update.
 - Email update.
 - Password change.
@@ -187,7 +188,6 @@ At first, the idea was to build a simple task app, but as I kept learning, I add
 - JSON Web Token.
 - Bcrypt.js.
 - Zod.
-- Cookie Parser.
 - CORS.
 - Multer.
 - Cloudinary.
@@ -254,7 +254,6 @@ PORT=4000
 MONGODB_URI=your_mongodb_connection_string
 TOKEN_SECRET=your_jwt_secret
 CLIENT_URL=http://localhost:5173
-NODE_ENV=development
 
 CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
@@ -364,7 +363,7 @@ A page where the user can update their information, change their password, uploa
 
 Some challenges I faced during this project were:
 
-- Understanding how to manage authentication with JWT and cookies.
+- Understanding different authentication approaches using JWT, including cookies and Bearer Tokens.
 - Correctly connecting the frontend with the backend using Axios.
 - Protecting private routes in React.
 - Keeping the global authentication and task state updated.
@@ -374,6 +373,8 @@ Some challenges I faced during this project were:
 - Implementing quick status changes without having to open the edit form.
 - Creating a Kanban view with drag and drop.
 - Improving the interface so it did not feel like a simple CRUD app.
+- Solving authentication issues that appeared after deploying the frontend and backend on different platforms. During testing, I discovered that authentication based on cookies was not
+  working reliably on some browsers and mobile devices, so I migrated the project to JWT Bearer Tokens.
 
 ---
 
@@ -384,6 +385,8 @@ With this project, I learned how the different parts of a full stack application
 On the frontend, I practiced React, protected routes, forms, context management, HTTP requests, reusable components, and design with Tailwind CSS.
 
 On the backend, I practiced Express, routes, controllers, middlewares, validation with Zod, Mongoose models, JWT authentication, password encryption, and integration with external services like Cloudinary.
+
+One of the most valuable lessons came after deployment. While testing the application on desktop, mobile devices, and private browsing modes, I encountered authentication problems related to cross-site cookies. Investigating and solving that issue helped me better understand browser security policies, CORS, JWT authentication, and the differences between cookie-based authentication and Bearer Token authentication.
 
 I also learned that an application should not only work, but also provide a good user experience. That is why I added loading screens, messages, empty states, confirmations, and a more polished interface.
 
@@ -402,6 +405,16 @@ Some improvements I would like to add in future versions:
 - Improvements to the mobile experience.
 - More productivity charts.
 - Custom tags to classify tasks.
+
+---
+
+## Deployment notes
+
+Originally, this project used JWT authentication stored in HTTP-only cookies.
+
+After deployment, I discovered that some browsers and environments, especially mobile browsers and private browsing modes, were not handling cross-site cookies consistently between the frontend hosted on Vercel and the backend hosted on Render.
+
+To improve reliability across different devices and browsers, the authentication system was migrated to JWT Bearer Tokens. This change solved the session persistence issues and allowed authentication to work consistently on desktop, mobile devices, and incognito mode.
 
 ---
 
@@ -427,4 +440,3 @@ It currently allows users to register, log in, manage tasks, use the dashboard, 
 This project represents my first step in building a more complete full stack application. It started as a basic practice project about implementing login and registration, but I kept adding features and fixing details little by little while learning, until I created a web application with real practical value.
 
 The part that helped me the most was understanding how the frontend, backend, and database connect within a single project. It also helped me practice how to turn a simple idea into a more complete and presentable application.
-

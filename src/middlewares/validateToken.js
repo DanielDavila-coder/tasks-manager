@@ -8,7 +8,7 @@ export const getTokenFromRequest = (req) => {
     return authHeader.split(" ")[1];
   }
 
-  return req.cookies.token;
+  return null;
 };
 
 export const authRequired = (req, res, next) => {
