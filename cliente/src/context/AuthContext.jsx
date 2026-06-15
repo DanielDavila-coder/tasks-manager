@@ -27,6 +27,22 @@ export const AuthProvider = ({ children }) => {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const saveSession = (data) => {
+    const { token, ...userData } = data;
+
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+
+    setUser(userData);
+    setIsAuthenticated(true);
+  };
+
+  const clearSession = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+    setUser(null);
+  };
   const getErrorMessages = (error) => {
     const data = error.response?.data;
 
@@ -40,8 +56,7 @@ export const AuthProvider = ({ children }) => {
   const signup = async (user) => {
     try {
       const res = await registerRequest(user);
-      setUser(res.data);
-      setIsAuthenticated(true);
+      saveSession(res.data);
     } catch (error) {
       setErrors(getErrorMessages(error));
     }
@@ -50,21 +65,18 @@ export const AuthProvider = ({ children }) => {
   const signin = async (user) => {
     try {
       const res = await loginRequest(user);
-      setIsAuthenticated(true);
-      setUser(res.data);
+      saveSession(res.data);
     } catch (error) {
       setErrors(getErrorMessages(error));
     }
   };
-
   const logout = async () => {
     try {
       await logoutRequest();
     } catch {
       // Local auth state is still cleared below if the server is unavailable.
     } finally {
-      setIsAuthenticated(false);
-      setUser(null);
+      clearSession();
     }
   };
 
@@ -76,14 +88,12 @@ export const AuthProvider = ({ children }) => {
       return () => clearTimeout(timer);
     }
   }, [errors]);
-
   useEffect(() => {
     async function checklogin() {
       try {
         const res = await verifyTokenRequest();
         if (!res.data) {
-          setIsAuthenticated(false);
-          setUser(null);
+          clearSession();
           setLoading(false);
           return;
         }
@@ -92,14 +102,12 @@ export const AuthProvider = ({ children }) => {
         setUser(res.data);
         setLoading(false);
       } catch {
-        setIsAuthenticated(false);
-        setUser(null);
+        clearSession();
         setLoading(false);
       }
     }
     checklogin();
   }, []);
-
   const updateUsername = async (username) => {
     try {
       const res = await updateUsernameRequest(username);
@@ -125,7 +133,6 @@ export const AuthProvider = ({ children }) => {
       };
     }
   };
-
   const updatePassword = async (password) => {
     try {
       await updatePasswordRequest(password);
@@ -141,6 +148,7 @@ export const AuthProvider = ({ children }) => {
   const deleteAccount = async () => {
     try {
       await deleteAccountRequest();
+      clearSession();
       return { ok: true };
     } catch (error) {
       return {
@@ -149,7 +157,6 @@ export const AuthProvider = ({ children }) => {
       };
     }
   };
-
   const updateAvatar = async (file) => {
     const formData = new FormData();
     formData.append("avatar", file);

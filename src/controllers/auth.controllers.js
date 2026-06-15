@@ -8,6 +8,7 @@ import {
   TOKEN_SECRET,
 } from "../config.js";
 import Task from "../models/task.model.js";
+import { getTokenFromRequest } from "../middlewares/validateToken.js";
 import cloudinary from "../libs/cloudinary.js";
 
 const formatUserResponse = (user) => ({
@@ -39,7 +40,7 @@ export const register = async (req, res) => {
     const token = await createAccessToken({ id: useSaved._id });
 
     res.cookie("token", token, COOKIE_OPTIONS);
-    res.json(formatUserResponse(useSaved));
+    res.json({ ...formatUserResponse(useSaved), token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -59,11 +60,8 @@ export const login = async (req, res) => {
 
     const token = await createAccessToken({ id: userFound._id });
 
-    console.log("ENTRO A LOGIN"); /////////////////////////////////////////////
-    console.log("COOKIE OPTIONS:", COOKIE_OPTIONS); ///////////////////////////////////////////////
     res.cookie("token", token, COOKIE_OPTIONS);
-    console.log("TOKEN ENVIADO"); /////////////////////////////////////////////////
-    res.json(formatUserResponse(userFound));
+    res.json({ ...formatUserResponse(userFound), token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -87,7 +85,7 @@ export const profile = async (req, res) => {
 };
 
 export const verifyToken = async (req, res) => {
-  const { token } = req.cookies;
+  const token = getTokenFromRequest(req);
 
   if (!token) return res.status(401).json({ message: "Unauthorized" });
 
